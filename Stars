@@ -1,0 +1,35 @@
+#include <iostream>
+#include <iomanip>
+
+using namespace std;
+
+int main()
+{
+    int i = 0,j=0;
+    int stars = 5;
+    int setwidth = 2;
+    int format = 1;
+    for(i = stars;i>0;i=i-2)
+    {
+        cout <<setw(format);
+        for(j=0;j<i;j++)
+        {
+                cout <<"*";
+        }
+        cout <<"\n";
+
+        format++;
+    }
+    for(i = 1; i<=stars ; i= i+2)
+    {
+        format--;
+        cout <<setw(format);
+        for(j=0;j<i;j++)
+        {
+            cout<<"*";
+        }
+        cout <<"\n";
+
+    }
+    return 0;
+}
