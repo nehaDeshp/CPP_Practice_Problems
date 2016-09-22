@@ -1,0 +1,270 @@
+#include <iostream>
+#include "allfunc.h"
+using namespace std;
+/*Main.cpp*/
+int main()
+{
+    int opt;
+    int n;
+    AllFunc f;
+    cout<<"1. Factorial\n";
+    cout<<"2. Recursive Function\n";
+    cout<<"3. Recursive Multiplication \n";
+    cout<<"4. Recursive Addition \n";
+    cout<<"5. Recursive Power \n";
+    cout<<"6. Search Member \n";
+    cout<<"7. Reverse \n";
+    cout<<"8. Palindrome Check \n";
+    cout<<"9. Recursive Addition(Linked List) \n";
+    cout<<"10. Max Node(Linked List) \n";
+    cin>>opt;
+
+    switch(opt)
+    {
+        case 1:
+            cout<<"Enter Number for Factorial :";
+            cin>>n;
+            cout<<"The factorial is : "<<f.factorial(n) <<endl;
+            break;
+        case 2:
+            cout<<"Enter Number of Repetitions :";
+            cin>>n;
+            f.recursiveFunction(n);
+            break;
+        case 3:
+            int num1,num2;
+            cout<<"Enter Number to multiply";
+            cin>>num1;
+            cout<<"Enter Number to be multiplied by";
+            cin>>num2;
+            cout<<"The multiplication is : "<<f.mul(num1,num2);
+            break;
+        case 4:
+            int size;
+            cout<<"Enter array Size :";
+            cin>>size;
+            int a[size];
+            cout <<"Enter array Elements :";
+            for(int i=0;i<size;i++)
+                cin>>a[i];
+            cout<<"The addition is : "<<f.sum(a,size);
+            break;
+        case 5:
+            cout<<"Enter Number";
+            cin>>num1;
+            cout<<"Enter Power";
+            cin>>num2;
+            cout<<"The Answer : "<<f.pow(num1,num2);
+            break;
+        case 6:
+            cout<<"Enter array Size :";
+            cin>>size;
+            int g[size];
+            cout <<"Enter array Elements :";
+            for(int i=0;i<size;i++)
+                cin>>g[i];
+            cout<<"Enter Number to find"<<endl;
+            cin>>num1;
+            cout<<"The Answer : "<<f.isMember(g,num1,size);
+            break;
+         case 7:{
+            string str;
+            cout<<"Enter String :";
+            cin>>str;
+            f.revString(str);
+            break;}
+        case 8:{
+            string str1;
+            cout<<"Enter String :";
+            cin>>str1;
+            cout<<f.palindromeDetect(str1);
+            break;}
+        case 10:
+            cout<<"Enter array Size :";
+            cin>>size;
+            cout <<"Enter array Elements :";
+            for(int i=0;i<size;i++)
+            {
+                int x;
+                cout<<"Enter Value :"<<endl;
+                cin>>x;
+                f.maxNode();
+            }
+            //cout<<"The maximum from the list is :"<<maxNode();
+            break;
+        default:
+            cout<<"Invalid Choice. Try Again."<<endl;
+    }
+    return 0;
+}
+/*allFunc.cpp*/
+#include "allfunc.h"
+#include <iostream>
+using namespace std;
+int AllFunc :: factorial(int num)
+{
+    if(num == 0)
+        return 1;
+    else
+    {
+        return num*factorial(num-1);
+    }
+}
+void AllFunc :: recursiveFunction(int n)
+{
+    if(n==0)
+        return;
+    else
+    {
+        cout<<"No Parking"<<endl;
+        recursiveFunction(n-1);
+    }
+}
+int AllFunc :: sum(int a[],int size)
+{
+    if(size == 0)
+        return 0;
+    else
+        return sum(a,size-1) + a[size-1];
+}
+int AllFunc :: mul(int a,int b)
+{
+    if(b == 0)
+        return 0;
+    else
+    {
+        return mul(a,b-1)+a;
+    }
+}
+int AllFunc :: pow(int a,int b)
+{
+    if(b == 0)
+        return 1;
+    else
+    {
+        return pow(a,b-1)*a;
+    }
+}
+bool AllFunc :: isMember(int a[],int m,int size)
+{
+
+      if(a[size] == m)
+        return true;
+      else
+      {
+          if(size !=0)
+          {
+              isMember(a,m,size-1);
+          }
+          else
+          {
+              return false;
+          }
+      }
+}
+void AllFunc :: revString(string s)
+{
+    if(!s.empty())
+    {
+        cout<<s[s.length()-1];
+        s=s.substr(0,s.length()- 1);
+        revString(s);
+    }
+}
+bool AllFunc :: palindromeDetect(string s)
+{
+    if(!s.empty())
+    {
+        if(s[0] == s[s.length()-1])
+        {
+            s = s.substr(1,s.length()-2);
+            palindromeDetect(s);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+}
+void AllFunc :: addList(int x)
+{
+    int size=0;
+    ListNode *newNode = new ListNode;
+    ListNode *tmp;
+    newNode->x = x;
+    newNode->next = nullptr;
+    if(head == nullptr)
+    {
+     head = newNode;
+     size++;
+    }
+    else
+    {
+        tmp = head;
+        while(tmp->next)
+        {
+            tmp=tmp->next;
+        }
+        tmp->next = newNode;
+        size++;
+    }
+
+    tmp=head;
+    cout <<"The addittion is : "<<sumList(head,size);
+    cout<<"You entered :"<<endl;
+    while(tmp)
+    {
+        cout<<tmp->x<<"-->";
+        tmp=tmp->next;
+    }
+}
+ int AllFunc :: sumList(ListNode *head,int size)
+ {
+     if(head == nullptr)
+            return 0;
+     else
+     {
+         ListNode *tmp;
+         tmp =head;
+         return sumList(tmp->next,size) + head->x;
+     }
+
+ }
+ int AllFunc :: maxNode()
+ {
+
+ }
+/*allfunc.h*/
+#ifndef ALLFUNC_H
+#define ALLFUNC_H
+#include<string>
+using namespace std;
+class AllFunc
+{
+    private:
+        struct ListNode
+        {
+            int x;
+            ListNode *next;
+        };
+        ListNode *head;
+    public:
+        AllFunc()
+        {
+            head = nullptr;
+        }
+       int factorial(int);
+       void recursiveFunction(int);
+       int sum(int[],int);
+       int mul(int,int);
+       int pow(int,int);
+       bool isMember(int[],int,int);
+       void revString(string);
+       bool palindromeDetect(string);
+       void addList(int);
+       int sumList(ListNode *,int);
+       int maxNode();
+};
+
+#endif // ALLFUNC_H
