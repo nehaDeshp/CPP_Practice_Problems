@@ -1,0 +1,60 @@
+#include <iostream>
+
+using namespace std;
+void sortArray(int *a)
+{
+    int i=0,j;
+    int tmp;
+    cout<<"The size of array :"<<sizeof(a);
+    for(i = 0; i<sizeof(a)+1;i++)
+    {
+        for(j=i+1;j<sizeof(a)+1;j++)
+        {
+            if(*(a+i) > *(a+j))
+            {
+                tmp = *(a+i);
+                *(a+i) = *(a+j);
+                *(a+j) = tmp;
+            }
+        }
+    }
+}
+double avg(int *a)
+{
+    double avg;
+    for(int i=0;i<sizeof(a)+1;i++)
+    {
+        avg = avg+(*(a+i));
+    }
+    return avg/sizeof(a)+1;
+}
+int lowest(int * a)
+{
+    for(int i=0;i<sizeof(a);i++)
+    {
+        *(a+i) = *(a+i+1);
+    }
+    delete a[5];
+}
+int main()
+{
+    int *sortingArray;
+    int arrsize;
+    cout<<"Enter the number of test scores :"<<endl;
+    cin>>arrsize;
+
+    sortingArray = new int[arrsize];
+    for(int i=0;i<5;i++)
+    {
+        cin>>*(sortingArray+i);
+    }
+    sortArray(sortingArray);
+    cout<<"The sorted Array is :";
+    for(int i=0;i<5;i++)
+    {
+        cout<<*(sortingArray+i)<<endl;
+    }
+    cout<<"Average is :"<<avg(sortingArray);
+    cout << "The lowest score is :"<<lowest(sortingArray);
+    return 0;
+}
