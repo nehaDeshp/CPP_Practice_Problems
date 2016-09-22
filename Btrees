@@ -1,0 +1,266 @@
+/*Main.cpp*/
+#include <iostream>
+#include <binarytree.h>
+using namespace std;
+
+int main()
+{
+    BinaryTree<float> b;
+    b.insertTreeNode(5);
+    b.insertTreeNode(4);
+    b.insertTreeNode(3);
+    b.insertTreeNode(2);
+    b.insertTreeNode(6);
+    b.insertTreeNode(8);
+    b.insertTreeNode(7);
+    b.countNodes();
+    b.countLeaves();
+    b.treeHeight();
+    b.searchTree(-1);
+    b.searchTree(100);
+    cout<<"------------"<<endl;
+    b.deleteNode(3);
+    cout<<"------------"<<endl;
+    b.display();
+    cout<<"==BCOPY==";
+    BinaryTree<float> bcopy;
+    bcopy = b;
+    bcopy.display();
+
+    b.width();
+    bcopy.width();
+}
+
+/*binarytree.h*/
+#ifndef BINARYTREE_H
+#define BINARYTREE_H
+#include <iostream>
+using namespace std;
+template <class T>
+class BinaryTree
+{
+private:
+    struct TreeNode
+    {
+        T data;
+        TreeNode *leftChild;
+        TreeNode *rightChild;
+    };
+    TreeNode *root;
+public:
+    BinaryTree()
+    {
+        root = nullptr;
+    }
+    void insertTreeNode(T data)
+    {
+        TreeNode *newNode = new TreeNode;
+        newNode->data = data;
+        newNode->leftChild = nullptr;
+        newNode->rightChild = nullptr;
+        actualInsert(root,newNode);
+    }
+    void actualInsert(TreeNode *&rootPointer,TreeNode *&newNode)
+    {
+        if(rootPointer == nullptr)
+            rootPointer = newNode;
+        else if(newNode->data < rootPointer->data)
+            actualInsert(rootPointer->leftChild,newNode);
+        else if(newNode->data > rootPointer->data)
+            actualInsert(rootPointer->rightChild,newNode);
+    }
+    void display()
+    {
+        cout<<"Inorder Traversal:";
+        display(root);
+        cout<<"PreOrder Traversal:";
+        displayPre(root);
+        cout<<"PostOrder Traversal:";
+        displayPost(root);
+    }
+    void displayPre(TreeNode *in)
+    {
+        if(in)
+        {
+            cout<<in->data<<endl;
+            display(in->leftChild);
+            display(in->rightChild);
+
+        }
+    }
+    void displayPost(TreeNode *in)
+    {
+        if(in)
+        {
+            display(in->leftChild);
+            display(in->rightChild);
+            cout<<in->data<<endl;
+
+        }
+    }
+    void display(TreeNode *in)
+    {
+        if(in)
+        {
+            display(in->leftChild);
+            cout<<in->data<<endl;
+            display(in->rightChild);
+        }
+    }
+    void countNodes()
+    {
+        cout<<"Nodes:"<<countNodes(root)<<endl;
+    }
+    int countNodes(TreeNode *rt)
+    {
+        if(rt == nullptr)
+            return 0;
+        else
+            return 1+countNodes(rt->leftChild)+countNodes(rt->rightChild);
+    }
+    void countLeaves()
+    {
+        cout<<"No. of Leaves = "<<countLeaves(root)<<endl;
+    }
+    int countLeaves(TreeNode *rt)
+    {
+        if(rt == nullptr)
+            return 0;
+        else if(rt->leftChild == nullptr && rt->rightChild == nullptr)
+            return 1;
+        else
+            return countLeaves(rt->leftChild)+countLeaves(rt->rightChild);
+    }
+    void treeHeight()
+    {
+        cout<<"Height of the tree :"<<treeHeight(root)<<endl;
+    }
+    int treeHeight(TreeNode *rt)
+    {
+        if(rt == nullptr)
+            return 0;
+        else
+        {
+            int lht = 1+treeHeight(rt->leftChild);
+            int rht = 1+treeHeight(rt->rightChild);
+            return (lht>rht) ? lht : rht;
+        }
+    }
+    void searchTree(T x)
+    {
+        if(searchTree(root,x))
+            cout<<"Element found"<<endl;
+        else
+            cout<<"Element not found"<<endl;
+    }
+    bool searchTree(TreeNode *t, T x)
+    {
+        if(t == nullptr)
+            return false;
+        else if(t->data == x)
+            return true;
+        else
+        {
+            if(t->data > x)
+                return searchTree(t->leftChild,x);
+            else if(t->data < x)
+                return searchTree(t->rightChild,x);
+            return false;
+        }
+    }
+    void deleteNode(T x)
+    {
+        deleteNode(root,x);
+    }
+    void deleteNode(TreeNode *&t, T x)
+    {
+            if(x < t->data)
+                deleteNode(t->leftChild,x);
+            else if(x > t->data)
+                deleteNode(t->rightChild,x);
+            else
+                deletion(t);
+    }
+    void deletion(TreeNode *& t)
+    {
+        TreeNode *tmp = nullptr;
+        if(t == nullptr)
+            cout<<"Cannot delete NULL"<<endl;
+        else if(t->leftChild == nullptr)
+        {
+            tmp = t;
+            t = t->rightChild;
+            delete tmp;
+            cout<<"Node Deleted"<<endl;
+        }
+        else if(t->rightChild == nullptr)
+        {
+            tmp = t;
+            t = t->leftChild;
+            delete tmp;
+            cout<<"Node Deleted"<<endl;
+        }
+        else
+        {
+            tmp = t->rightChild;
+            while (tmp->leftChild)
+                tmp  = tmp->leftChild;
+            tmp->leftChild = t->leftChild;
+            tmp = t;
+            t=t->rightChild;
+            delete tmp;
+        }
+    }
+    BinaryTree(const TreeNode &t)
+    {
+        if(root == nullptr)
+        {
+            t = nullptr;
+        }
+        else
+        {
+            copyTree(root, t);
+        }
+    }
+    void copyTree(TreeNode *root,TreeNode *t)
+    {
+        if(root == nullptr)
+            t = nullptr;
+        else
+        {
+            t = new TreeNode;
+            t->data = root->data;
+            copyTree(root->leftChild,t->leftChild);
+            copyTree(root->rightChild,t->rightChild);
+        }
+    }
+    void operator=(BinaryTree *rt)
+    {
+       BinaryTree(rt);
+    }
+    void width()
+    {
+        int w;
+        int m = 0;
+        for(int i=1; i<=treeHeight(root); i++)
+        {
+            w = width(root, i);
+            if(w > m)
+              m = w;
+        }
+        cout<<"Tree Width :"<<m;
+    }
+    int width(TreeNode *t,int nextHeight)
+    {
+        if(t == nullptr)
+            return 0;
+        else if(nextHeight == 1)
+            return 1;
+        else
+            return width(root->leftChild,nextHeight-1) + width(root->rightChild,nextHeight-1);
+
+    }
+};
+
+
+#endif // BINARYTREE_H
